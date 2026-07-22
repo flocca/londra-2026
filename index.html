@@ -127,6 +127,16 @@
   .tlc .w{font-family:var(--display); font-weight:600; font-size:15.5px; margin-top:3px; line-height:1.15}
   .tlc .e{float:right; font-size:20px; margin-top:-2px}
 
+  /* ---------- oggi ---------- */
+  .todaybadge{display:inline-block; margin-left:8px; padding:3px 8px; border-radius:999px;
+    background:var(--yellow); color:#3A2E00; font-size:11px; font-weight:800; letter-spacing:.06em;}
+  .tlc.today{outline:2px solid var(--yellow); background:rgba(255,212,0,.16);}
+  #todayBtn{height:40px; padding:0 16px; border-radius:999px; border:none;
+    background:var(--yellow); color:#3A2E00; font-family:var(--body); font-weight:800;
+    font-size:13px; letter-spacing:.04em; cursor:pointer; flex:none; display:none;
+    box-shadow:0 4px 16px rgba(0,0,0,.35);}
+  #todayBtn:focus-visible{outline:2px solid #fff; outline-offset:2px}
+
   /* ---------- nav ---------- */
   #bar{position:fixed; left:0; right:0; bottom:0; height:78px; z-index:20;
        display:flex; align-items:center; justify-content:space-between;
@@ -154,6 +164,7 @@
 <div id="bar">
   <button class="nav" id="prev" aria-label="Slide precedente">←</button>
   <div id="dots"></div>
+  <button id="todayBtn" aria-label="Vai al giorno corrente">📍 Oggi</button>
   <button class="nav" id="next" aria-label="Slide successiva">→</button>
 </div>
 
@@ -162,7 +173,17 @@
    Versione piano: 21 luglio 2026 — allineata a "Londra 2026.md".
    Per aggiornare: modificare SLIDES qui sotto e ripubblicare l'artifact
    (stesso file = stesso URL). Aggiornare anche la data in UPDATED. */
-const UPDATED = '21 luglio 2026';
+const UPDATED = '22 luglio 2026';
+
+/* ============ oggi (modalità compagno di viaggio) ============
+   Il "giorno" cambia alle 4:00 ora di Londra, così i rientri dopo
+   mezzanotte (es. Studio Tour) restano sul giorno giusto. */
+function dayNumberToday(){
+  const shifted = new Date(Date.now() - 4*3600*1000);
+  const ymd = new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London'}).format(shifted);
+  return Math.round((Date.parse(ymd) - Date.parse('2026-07-23'))/86400000) + 1;
+}
+const todayN = dayNumberToday();   /* <1 = pre-viaggio · 1..13 = in viaggio · >13 = post */
 
 /* ============ badge helper ============ */
 const A='<span class="b alice">👸🏼 Alice</span>';
@@ -392,6 +413,7 @@ const SLIDES = [
 /* ============ build ============ */
 const deck = document.getElementById('deck');
 const dots = document.getElementById('dots');
+const dayIdx = {};   /* numero giorno → indice slide */
 
 function actHTML(a){
   return `<div class="act"><div class="ico">${a.i}</div><div class="txt">
@@ -407,10 +429,11 @@ SLIDES.forEach((s,idx)=>{
   let inner;
   if(s.html){ inner = s.html; }
   else {
+    dayIdx[s.day] = idx;
     inner = `<div class="body">
       <div class="dayhead">
         <div class="num">${s.day}</div>
-        <div><div class="date">${s.date}</div><h2 style="margin-top:2px">${s.title}</h2></div>
+        <div><div class="date">${s.date}${s.day===todayN?'<span class="todaybadge">OGGI</span>':''}</div><h2 style="margin-top:2px">${s.title}</h2></div>
         <div class="emoji">${s.emoji}</div>
       </div>
       <div class="scroller"><div class="acts">
@@ -429,8 +452,8 @@ SLIDES.forEach((s,idx)=>{
 const tg=document.getElementById('tlgrid');
 SLIDES.forEach((s,i)=>{
   if(!s.day) return;
-  const c=document.createElement('div'); c.className='tlc';
-  c.innerHTML=`<div class="e">${s.emoji}</div><div class="n">GIORNO ${s.day} · ${s.date.split(' ')[0].toUpperCase()} ${s.date.split(' ')[1]}</div><div class="w">${s.short}</div>`;
+  const c=document.createElement('div'); c.className='tlc'+(s.day===todayN?' today':'');
+  c.innerHTML=`<div class="e">${s.emoji}</div><div class="n">GIORNO ${s.day} · ${s.date.split(' ')[0].toUpperCase()} ${s.date.split(' ')[1]}${s.day===todayN?' · OGGI':''}</div><div class="w">${s.short}</div>`;
   c.onclick=()=>go(i); tg.appendChild(c);
 });
 
@@ -447,7 +470,11 @@ function go(i){
   document.getElementById('next').disabled=cur===SLIDES.length-1;
   slides[cur].querySelectorAll('.act').forEach((a,k)=>a.style.animationDelay=(k*.07)+'s');
   const sc=slides[cur].querySelector('.scroller'); if(sc) sc.scrollTop=0;
+  /* pulsante "Oggi": visibile solo in viaggio e fuori dalla slide del giorno */
+  const tb=document.getElementById('todayBtn');
+  tb.style.display=(dayIdx[todayN]!==undefined && cur!==dayIdx[todayN])?'block':'none';
 }
+document.getElementById('todayBtn').onclick=()=>go(dayIdx[todayN]);
 document.getElementById('next').onclick=()=>go(cur+1);
 document.getElementById('prev').onclick=()=>go(cur-1);
 document.addEventListener('keydown',e=>{
@@ -462,7 +489,10 @@ document.addEventListener('touchend',e=>{
   const dx=e.changedTouches[0].clientX-sx, dy=e.changedTouches[0].clientY-sy;
   if(Math.abs(dx)>60 && Math.abs(dx)>Math.abs(dy)*1.5) go(cur+(dx<0?1:-1));
 },{passive:true});
-go(0);
+
+/* ============ avvio: compagno di viaggio ============
+   In viaggio → si apre sul giorno corrente; prima → copertina; dopo → chiusura. */
+go(dayIdx[todayN]!==undefined ? dayIdx[todayN] : (todayN>13 ? SLIDES.length-1 : 0));
 </script>
 </body>
 </html>
