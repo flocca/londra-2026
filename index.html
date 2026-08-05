@@ -127,6 +127,15 @@
   .card h3{font-family:var(--display); font-weight:600; font-size:19px; margin:8px 0 5px}
   .card p{font-size:14px; opacity:.85; line-height:1.45}
 
+  /* ---------- riepilogo finale (giorno per giorno) ---------- */
+  .rec{display:flex; flex-direction:column; gap:8px; margin-top:20px}
+  .rl{display:flex; gap:12px; align-items:baseline;
+      background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.15);
+      border-radius:13px; padding:9px 13px;}
+  .rl .d{font-family:var(--display); font-weight:700; font-size:14px; opacity:.7;
+         flex:0 0 auto; min-width:62px; letter-spacing:.01em}
+  .rl .p{font-size:14.5px; line-height:1.45; opacity:.92}
+
   /* ---------- overview timeline ---------- */
   .tl{display:grid; gap:8px; margin-top:18px;
       grid-template-columns:repeat(auto-fit,minmax(150px,1fr));}
@@ -441,14 +450,12 @@ const SLIDES = [
   bg:'linear-gradient(135deg,#E4322B,#7B3FE4)',
   acts:[
    {i:'🧳',t:'Check-out entro le 11',d:'Ultima colazione londinese e si parte con tutti i bagagli.',w:[T]},
-   {i:'🔄',t:'Cambio di programma delle 11:50',d:'Al Natural History Museum c\'era il pieno d\'agosto: troppa fila, troppa gente, e dopo dodici giorni di meraviglie le gambe hanno detto basta. Niente dinosauri e niente Hyde Park: si chiude con calma, al fresco.',w:[T]},
-   {i:'🌳',t:'Anche il prato salta — decisione delle 12:33',d:'Per mezz\'ora l\'ultimo pomeriggio è stato un prato all\'ombra dell\'Albert Memorial. Poi ha vinto il caldo: trentotto gradi percepiti, sei colli addosso e dodici giorni nelle gambe. Obiettivo aeroporto, diretti.',w:[T]},
-   {i:'🛒',t:'Il pranzo, comprato prima di scendere in metro',d:'Meal deal al supermercato di South Kensington: la formula che ha retto tutto il viaggio, invece di scommettere sui negozi del terminal. L\'ultima lezione imparata, applicata l\'ultimo giorno.',w:[T]},
-   {i:'🚇',t:'Metro diretta all\'aeroporto, a mezzogiorno',d:'Piccadilly line fino a Heathrow senza cambi. A mezzogiorno è semivuota: alle cinque del pomeriggio sarebbe stata ora di punta più traffico aeroporto, con sei colli. Anticipare non è stata una resa, è stato il viaggio migliore.',w:[T]},
-   {i:'🪑',t:'Terminal 5 dall\'una e mezza',d:'Aria condizionata, bagni, carrelli: i bagagli smettono di essere un peso. Base a un tavolo prima dei controlli, ci si alterna e nessuno smonta il campo. Sette ore di aeroporto, scelte in cambio di fresco e sedute vere.',w:[T]},
-   {i:'🫖',t:'Fortnum & Mason al Terminal 5 — se va',d:'Il tè da regalo è già stato comprato lunedì a St Pancras, quindi qui non c\'è più niente da fare di corsa: c\'è un Fortnum & Mason anche al Level 2, passati i controlli. Se ci si passa davanti e c\'è qualcosa di bello in più, si guarda con calma.',w:[T]},
-   {i:'🍺',t:'Ultima cena: un Wetherspoon, dentro Heathrow',d:'Passati i controlli alle sei. E l\'ultima cena del viaggio è finita esattamente dove erano finite le migliori: a un Wetherspoon — dopo Whitstable, Liverpool ed Euston, il quarto. Perfino in aeroporto.',w:[T]},
-   {i:'✈️',t:'Volo serale → Bologna',d:'Partito con un\'ora di ritardo, atterrato dopo mezzanotte. Lucilla ad aspettarci all\'arrivo, e poi a casa. Fine.',w:[T,BK]},
+   {i:'🔄',t:'Cambio di programma alle 11:50',d:'Al Natural History Museum c\'era il pieno d\'agosto: troppa fila. Niente dinosauri e niente Hyde Park.',w:[T]},
+   {i:'🛒',t:'Il pranzo comprato a South Kensington',d:'Meal deal al supermercato prima di scendere in metro, come nei giorni in città.',w:[T]},
+   {i:'🚇',t:'Metro diretta all\'aeroporto',d:'Piccadilly line fino a Heathrow senza cambi, a mezzogiorno.',w:[T]},
+   {i:'🪑',t:'Terminal 5 dall\'una e mezza',d:'Pomeriggio in aeroporto: aria condizionata, carrelli per i bagagli, controlli passati alle sei.',w:[T]},
+   {i:'🍺',t:'Ultima cena: un Wetherspoon dentro Heathrow',d:'Il quarto del viaggio, dopo Whitstable, Liverpool ed Euston.',w:[T]},
+   {i:'✈️',t:'Volo serale → Bologna',d:'Partito con un\'ora di ritardo, atterrato dopo mezzanotte. Lucilla ad aspettarci all\'arrivo, e poi a casa.',w:[T,BK]},
   ]},
 
 /* ---------- CHIUSURA ---------- */
@@ -460,11 +467,20 @@ const SLIDES = [
       Una base sola a East London per tutti e tredici i giorni. Tre giornate fuori città —
       <b>Whitstable e Canterbury</b>, <b>Liverpool</b>, <b>Oxford</b> — e tutto il resto a Londra.
     </p>
-    <div class="grid" style="margin-top:28px">
-      <div class="card"><div class="e">👸🏼</div><h3>Per Alice</h3><p>Warner Bros. Studio Tour · il binario 9¾ a King's Cross · Wonderlab al Science Museum · MinaLima a Soho · Alice's Shop a Oxford · la Torre di Londra · Camden · le statue di Leicester Square</p></div>
-      <div class="card"><div class="e">👩🏻</div><h3>Per Manuela</h3><p>Whitstable e il suo porto · la cattedrale di Canterbury e i giardini di Westgate · St James's Park · Holland Park e il Kyoto Garden · Portobello Road · i luoghi dei Queen, da Imperial College a Garden Lodge · Highgate e Waterlow Park · il mercato vintage del Truman · Piccadilly Circus e Chinatown</p></div>
-      <div class="card"><div class="e">🧔🏻‍♂️</div><h3>Per Giacomo</h3><p>Abbey Road · Liverpool: Mathew Street, il Cavern, il Pier Head e l'Albert Dock · il Lightroom a King's Cross · le sale del Giappone al British Museum · il murale di Brixton e la Brixton Academy · Oxford: New College, Christ Church, il Turf Tavern · Highgate Cemetery · Trident Studios e Denmark Street · Heddon Street</p></div>
-      <div class="card"><div class="e">🎂</div><h3>Per tutti</h3><p>Westminster e Trafalgar Square · la National Gallery · il London Eye · St Paul's e il Millennium Bridge · la Tate Modern · Borough Market · Greenwich e il Meridiano · Leadenhall Market · Brick Lane · il V&amp;A East Storehouse</p></div>
+    <div class="rec">
+      <div class="rl"><div class="d">1 · gio 23</div><div class="p">Volo Bologna → Heathrow, Elizabeth Line fino a Ilford e prima passeggiata in zona</div></div>
+      <div class="rl"><div class="d">2 · ven 24</div><div class="p">Cambio della Guardia dal Victoria Memorial · Horse Guards e Downing Street · Trafalgar Square e la National Gallery · Westminster</div></div>
+      <div class="rl"><div class="d">3 · sab 25</div><div class="p">Borough Market · l'HMS Belfast e il lungofiume · la Torre di Londra · Leadenhall Market</div></div>
+      <div class="rl"><div class="d">4 · dom 26</div><div class="p">Abbey Road e il muro firmato · Regent's Park e la statua di Sherlock · Science Museum e Wonderlab · i luoghi dei Queen, da Imperial College a Garden Lodge</div></div>
+      <div class="rl"><div class="d">5 · lun 27</div><div class="p">London Eye · St James's Park · St Paul's e il Millennium Bridge · Tate Modern · Camden</div></div>
+      <div class="rl"><div class="d">6 · mar 28</div><div class="p">Whitstable e il suo porto · Canterbury: la cattedrale, l'Evensong e i giardini di Westgate</div></div>
+      <div class="rl"><div class="d">7 · mer 29</div><div class="p">Liverpool: St George's Hall · il Pier Head e la statua dei Beatles · l'Albert Dock · Mathew Street e il Cavern</div></div>
+      <div class="rl"><div class="d">8 · gio 30</div><div class="p">Il binario 9¾ a King's Cross · il Lightroom · il British Museum e le sale del Giappone · Brixton: il murale di Aladdin Sane e la Brixton Academy</div></div>
+      <div class="rl"><div class="d">9 · ven 31</div><div class="p">Oxford: New College · il Bridge of Sighs e Radcliffe Square · Christ Church · Alice's Shop · il Turf Tavern · la terrazza del Westgate</div></div>
+      <div class="rl"><div class="d">10 · sab 1</div><div class="p">Portobello Road · Holland Park e il Kyoto Garden · Melbury Road · Greenwich e il Meridiano · Soho, Chinatown e Piccadilly Circus accesa</div></div>
+      <div class="rl"><div class="d">11 · dom 2</div><div class="p">Brick Lane e il mercato vintage del Truman · Rough Trade East · MinaLima e Denmark Street · il V&amp;A East Storehouse e il Bowie Centre</div></div>
+      <div class="rl"><div class="d">12 · lun 3</div><div class="p">Highgate: The Grove, Waterlow Park e il cimitero, con George Michael, Karl Marx e Douglas Adams · St Pancras · Warner Bros. Studio Tour</div></div>
+      <div class="rl"><div class="d">13 · mar 4</div><div class="p">South Kensington, Heathrow e il volo di ritorno</div></div>
     </div>
     <div style="margin-top:26px; font-size:38px; letter-spacing:8px">🇬🇧 ❤️</div>
   </div>`},
