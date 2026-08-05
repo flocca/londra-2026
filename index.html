@@ -57,6 +57,16 @@
   .scroller::-webkit-scrollbar{width:6px}
   .scroller::-webkit-scrollbar-thumb{background:rgba(255,255,255,.25); border-radius:9px}
 
+  /* Slide libere (copertina, fili, chiusura): non hanno .scroller, quindi il
+     contenuto più alto dello schermo veniva tagliato. Qui scorre .body stesso.
+     Il centraggio verticale si fa con i margini auto e NON con justify-content:
+     con flex center il contenuto che sborda diventa irraggiungibile anche in cima. */
+  .slide.plain .body{overflow-y:auto; -webkit-overflow-scrolling:touch; padding-right:4px;}
+  .slide.plain .body::-webkit-scrollbar{width:6px}
+  .slide.plain .body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.25); border-radius:9px}
+  .slide.plain.centered .body > :first-child{margin-top:auto}
+  .slide.plain.centered .body > :last-child{margin-bottom:auto}
+
   /* ---------- typography ---------- */
   h1{font-family:var(--display); font-weight:700; font-size:clamp(38px,7.5vw,92px); line-height:.98; letter-spacing:-.02em;}
   h2{font-family:var(--display); font-weight:600; font-size:clamp(26px,4.4vw,52px); line-height:1.02; letter-spacing:-.01em;}
@@ -495,6 +505,19 @@ SLIDES.forEach((s,idx)=>{
     </div>`;
   }
   el.innerHTML = veil + inner;
+
+  /* Slide senza .scroller: si fa scorrere .body. Il justify-content:center
+     inline va tolto (impedisce di raggiungere il contenuto che sborda in alto)
+     e sostituito dai margini auto della regola .plain.centered. */
+  if(!el.querySelector('.scroller')){
+    el.classList.add('plain');
+    const b = el.querySelector('.body');
+    if(b && /justify-content\s*:\s*center/.test(b.getAttribute('style')||'')){
+      b.style.justifyContent='';
+      el.classList.add('centered');
+    }
+  }
+
   deck.appendChild(el);
 
   const d=document.createElement('div'); d.className='dot';
@@ -522,7 +545,7 @@ function go(i){
   document.getElementById('prev').disabled=cur===0;
   document.getElementById('next').disabled=cur===SLIDES.length-1;
   slides[cur].querySelectorAll('.act').forEach((a,k)=>a.style.animationDelay=(k*.07)+'s');
-  const sc=slides[cur].querySelector('.scroller'); if(sc) sc.scrollTop=0;
+  const sc=slides[cur].querySelector('.scroller') || slides[cur].querySelector('.body'); if(sc) sc.scrollTop=0;
   /* pulsante "Oggi": visibile solo in viaggio e fuori dalla slide del giorno */
   const tb=document.getElementById('todayBtn');
   tb.style.display=(dayIdx[todayN]!==undefined && cur!==dayIdx[todayN])?'block':'none';
